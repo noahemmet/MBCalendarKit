@@ -30,6 +30,9 @@
         // Initialization code
         _state = CKCalendarMonthCellStateNormal;
         
+		// Font
+		_dayFont = [UIFont boldSystemFontOfSize:13];
+		
         //  Normal Cell Colors
         _normalBackgroundColor = kCalendarColorLightGray;
         _selectedBackgroundColor = kCalendarColorBlue;
@@ -134,13 +137,13 @@
     [self applyColors];
 }
 
-#pragma mark - Label 
+#pragma mark - Label
 
 - (void)configureLabel
 {
     UILabel *label = [self label];
     
-    [label setFont:[UIFont boldSystemFontOfSize:13]];
+    [label setFont:self.dayFont];
     [label setTextAlignment:NSTextAlignmentCenter];
     
     [label setBackgroundColor:[UIColor clearColor]];
@@ -167,7 +170,7 @@
 #pragma mark - UI Coloring
 
 - (void)applyColors
-{    
+{
     [self applyColorsForState:[self state]];
     [self showBorder];
 }
@@ -190,7 +193,7 @@
         [self setBackgroundColor:[self todaySelectedBackgroundColor]];
         [[self label] setShadowColor:[self todayTextShadowColor]];
         [[self label] setTextColor:[self todayTextColor]];
-        [self setBorderColor:[self backgroundColor]];
+        [self setBorderColor:[self todayCellBorderColor]];
     }
     
     //  Today cell, selected
@@ -199,7 +202,7 @@
         [self setBackgroundColor:[self todayBackgroundColor]];
         [[self label] setShadowColor:[self todayTextShadowColor]];
         [[self label] setTextColor:[self todayTextColor]];
-        [self setBorderColor:[self backgroundColor]];
+        [self setBorderColor:[self todaySelectedCellBorderColor]];
         [self showBorder];
     }
     

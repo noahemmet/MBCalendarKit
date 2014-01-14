@@ -27,6 +27,9 @@
 @property (nonatomic, strong) UIColor *todayBackgroundColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *todaySelectedBackgroundColor UI_APPEARANCE_SELECTOR;
 
+// Fonts
+@property (nonatomic, strong) UIFont *dayFont UI_APPEARANCE_SELECTOR;
+
 //  Text colors for today override the default text colors
 @property (nonatomic, strong) UIColor *todayTextColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *todayTextShadowColor UI_APPEARANCE_SELECTOR;
@@ -46,6 +49,9 @@
 // Border colors
 @property (nonatomic, strong) UIColor *cellBorderColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *selectedCellBorderColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) UIColor *todayCellBorderColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) UIColor *todaySelectedCellBorderColor UI_APPEARANCE_SELECTOR;
+
 
 
 - (id)initWithSize:(CGSize)size;
