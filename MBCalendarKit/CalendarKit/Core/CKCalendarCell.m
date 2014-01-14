@@ -217,7 +217,7 @@
     }
     
     if (state == CKCalendarMonthCellStateInactive) {
-        [[self label] setAlpha:0.5];    //  Label alpha needs to be lowered
+        [[self label] setBackgroundColor:[self inactiveBackgroundColor]];
         [[self label] setShadowOffset:CGSizeZero];
     }
     else if (state == CKCalendarMonthCellStateInactiveSelected)
