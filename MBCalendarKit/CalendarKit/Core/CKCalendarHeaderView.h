@@ -31,6 +31,13 @@
 @end
 
 @interface CKCalendarHeaderView : UIView
+@property (nonatomic, strong) UIImageView *forwardButton;
+@property (nonatomic, strong) UIImageView *backwardButton;
+@property UIImage *forwardImage;
+@property UIImage *backwardImage;
+
+@property (nonatomic, strong) UIView *columnBackgroundView;
+@property (nonatomic, strong) UIView *headerTitleBackgroundView;
 
 @property (nonatomic, assign) id<CKCalendarHeaderViewDataSource> dataSource;
 @property (nonatomic, assign) id<CKCalendarHeaderViewDelegate> delegate;

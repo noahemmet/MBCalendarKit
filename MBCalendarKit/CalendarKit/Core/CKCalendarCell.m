@@ -18,6 +18,7 @@
 @property (nonatomic, strong) UILabel *label;
 
 @property (nonatomic, strong) UIView *dot;
+@property (nonatomic, strong) UIImageView *backgroundImageView;
 
 @end
 
@@ -58,6 +59,9 @@
         
         // Label
         _label = [UILabel new];
+		
+		// Background Image
+		_backgroundImageView = [UIImageView new];
         
         //  Dot
         _dot = [UIView new];
@@ -90,9 +94,11 @@
 
 - (void)layoutSubviews
 {
+	[self configureBackgroundImage];
     [self configureLabel];
     [self configureDot];
     
+	[self addSubview:[self backgroundImageView]];
     [self addSubview:[self label]];
     [self addSubview:[self dot]];
 }
@@ -150,6 +156,11 @@
     [label setFrame:CGRectMake(0, 0, [self frame].size.width, [self frame].size.height)];
 }
 
+- (void)configureBackgroundImage{
+	self.backgroundImageView.backgroundColor = [UIColor clearColor];
+	self.backgroundImageView.frame = self.bounds;
+}
+
 #pragma mark - Dot
 
 - (void)configureDot
@@ -187,16 +198,19 @@
     [self setBorderWidth:0.5];
     [self setBackgroundColor:[self normalBackgroundColor]];
     
+	self.backgroundImageView.image = nil;
+	
     //  Today cell
     if(state == CKCalendarMonthCellStateTodaySelected)
     {
         [self setBackgroundColor:[self todaySelectedBackgroundColor]];
+		self.backgroundImageView.image = self.selectedBackgroundImage;
         [[self label] setShadowColor:[self todayTextShadowColor]];
         [[self label] setTextColor:[self todayTextColor]];
         [self setBorderColor:[self todayCellBorderColor]];
     }
     
-    //  Today cell, selected
+    //  Today cell, deselected
     else if(state == CKCalendarMonthCellStateTodayDeselected)
     {
         [self setBackgroundColor:[self todayBackgroundColor]];
@@ -210,6 +224,7 @@
     else if(state == CKCalendarMonthCellStateSelected)
     {
         [self setBackgroundColor:[self selectedBackgroundColor]];
+		self.backgroundImageView.image = self.selectedBackgroundImage;
         [self setBorderColor:[self selectedCellBorderColor]];
         [[self label] setTextColor:[self textSelectedColor]];
         [[self label] setShadowColor:[self textSelectedShadowColor]];
@@ -217,11 +232,12 @@
     }
     
     if (state == CKCalendarMonthCellStateInactive) {
-        [[self label] setBackgroundColor:[self inactiveBackgroundColor]];
+        [self setBackgroundColor:[self inactiveBackgroundColor]];
         [[self label] setShadowOffset:CGSizeZero];
     }
     else if (state == CKCalendarMonthCellStateInactiveSelected)
     {
+		self.backgroundImageView.image = self.selectedBackgroundImage;
         [[self label] setAlpha:0.5];    //  Label alpha needs to be lowered
         [[self label] setShadowOffset:CGSizeZero];
         [self setBackgroundColor:[self inactiveSelectedBackgroundColor]];

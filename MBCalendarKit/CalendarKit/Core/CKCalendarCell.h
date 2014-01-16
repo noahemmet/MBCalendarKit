@@ -23,6 +23,7 @@
 @property (nonatomic, strong) UIColor *selectedBackgroundColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *inactiveBackgroundColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *inactiveSelectedBackgroundColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) UIImage *selectedBackgroundImage UI_APPEARANCE_SELECTOR;
 
 //  Overrides normalBackgroundColor and selectedBackgroundColor for cell representing today
 @property (nonatomic, strong) UIColor *todayBackgroundColor UI_APPEARANCE_SELECTOR;

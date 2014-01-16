@@ -27,8 +27,6 @@
 @property (nonatomic, strong) NSMutableArray *columnTitles;
 @property (nonatomic, strong) NSMutableArray *columnLabels;
 
-@property (nonatomic, strong) MBPolygonView *forwardButton;
-@property (nonatomic, strong) MBPolygonView *backwardButton;
 
 @end
 
@@ -39,18 +37,22 @@
     self = [super initWithFrame:frame];
     if (self) {
         
+		_headerTitleBackgroundView = [UIView new];
+		
         _monthTitle = [UILabel new];
-        [_monthTitle setTextColor:kCalendarColorHeaderMonth];
-        [_monthTitle setShadowColor:kCalendarColorHeaderMonthShadow];
-        [_monthTitle setShadowOffset:CGSizeMake(0, 1)];
+        [_monthTitle setTextColor:[UIColor whiteColor]];
+		//        [_monthTitle setShadowColor:kCalendarColorHeaderMonthShadow];
+		//        [_monthTitle setShadowOffset:CGSizeMake(0, 1)];
         [_monthTitle setBackgroundColor:[UIColor clearColor]];
         [_monthTitle setTextAlignment:NSTextAlignmentCenter];
-        [_monthTitle setFont:[UIFont boldSystemFontOfSize:22]];
+        [_monthTitle setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:24]];
+		[self setBackgroundColor:[UIColor clearColor]];
         
+		_columnBackgroundView = [UIView new];
         _columnTitles = [NSMutableArray new];
         _columnLabels = [NSMutableArray new];
         
-        _columnTitleHeight = 10;
+        _columnTitleHeight = 30;
         
         _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandler:)];
         [self addGestureRecognizer:_tapGesture];
@@ -63,12 +65,13 @@
 {
     [self layoutSubviews];
     [super willMoveToSuperview:newSuperview];
-    [self setBackgroundColor:kCalendarColorHeaderGradientDark];
 }
 
 - (void)layoutSubviews
 {
-    
+    self.headerTitleBackgroundView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height - _columnTitleHeight);
+	[self addSubview:self.headerTitleBackgroundView];
+	
     /* Show & position the title Label */
     
     CGFloat upperRegionHeight = [self frame].size.height - _columnTitleHeight;
@@ -91,20 +94,20 @@
     [[self monthTitle] setText:title];
     
     /* Highlight the title color as appropriate */
-
+	
     if ([self shouldHighlightTitle])
     {
-        [[self monthTitle] setTextColor:kCalendarColorHeaderTitleHighlightedBlue];
+		//        [[self monthTitle] setTextColor:kCalendarColorHeaderTitleHighlightedBlue];
     }
     else
     {
-        [[self monthTitle] setTextColor:kCalendarColorHeaderMonth];
+		//        [[self monthTitle] setTextColor:kCalendarColorHeaderMonth];
     }
     
     /* Show the forward and back buttons */
-
-        CGRect backFrame = CGRectMake(yOffset, yOffset, titleLabelHeight, titleLabelHeight);
-        CGRect forwardFrame = CGRectMake([self frame].size.width-titleLabelHeight-yOffset, yOffset, titleLabelHeight, titleLabelHeight);
+	
+	CGRect backFrame = CGRectMake(yOffset, yOffset, titleLabelHeight, titleLabelHeight);
+	CGRect forwardFrame = CGRectMake([self frame].size.width-titleLabelHeight-yOffset, yOffset, titleLabelHeight, titleLabelHeight);
     
     if ([self forwardButton]) {
         [[self forwardButton] removeFromSuperview];
@@ -115,9 +118,27 @@
         [[self backwardButton] removeFromSuperview];
         [self setBackwardButton:nil];
     }
-    
-    _forwardButton = [[MBPolygonView alloc] initWithFrame:forwardFrame numberOfSides:3 andRotation:90.0 andScale:10.0];
-    _backwardButton = [[MBPolygonView alloc] initWithFrame:backFrame numberOfSides:3 andRotation:30.0 andScale:10.0];
+	//
+	_forwardButton = [[UIImageView alloc]initWithImage:self.forwardImage];
+	_forwardButton.frame = ({
+		CGRect frame = forwardFrame;
+		frame.size = self.forwardImage.size;
+		frame;
+	});
+	_forwardButton.center = CGPointMake(_forwardButton.center.x, self.monthTitle.center.y);
+	
+	
+	_backwardButton = [[UIImageView alloc]initWithImage:self.backwardImage];
+	_backwardButton.frame = ({
+		CGRect frame = backFrame;
+		frame.size = self.backwardImage.size;
+		frame;
+	});
+	_backwardButton.center = CGPointMake(_backwardButton.center.x, self.monthTitle.center.y);
+	
+	
+	//    _forwardButton = [[MBPolygonView alloc] initWithFrame:forwardFrame numberOfSides:3 andRotation:90.0 andScale:10.0];
+	//    _backwardButton = [[MBPolygonView alloc] initWithFrame:backFrame numberOfSides:3 andRotation:30.0 andScale:10.0];
     
     if ([self shouldDisableForwardButton]) {
         [[self forwardButton] setAlpha:0.5];
@@ -155,8 +176,10 @@
         [[self columnTitles] addObject:title];
     }
     
+    self.columnBackgroundView.frame = CGRectMake(0, self.frame.size.height-_columnTitleHeight, self.frame.size.width, _columnTitleHeight);
+	[self addSubview:self.columnBackgroundView];
+	
     /* Convert title strings into labels and lay them out */
-    
     if(_columnCount > 0){
         CGFloat labelWidth = [self frame].size.width/_columnCount;
         CGFloat labelHeight = _columnTitleHeight;
@@ -183,11 +206,11 @@
 {
     UILabel *l = [UILabel new];
     [l setBackgroundColor:[UIColor clearColor]];
-    [l setTextColor:kCalendarColorHeaderWeekdayTitle];
-    [l setShadowColor:kCalendarColorHeaderWeekdayShadow];
+    [l setTextColor:[UIColor whiteColor]];
+	//    [l setShadowColor:kCalendarColorHeaderWeekdayShadow];
     [l setTextAlignment:NSTextAlignmentCenter];
-    [l setFont:[UIFont boldSystemFontOfSize:10]];
-    [l setShadowOffset:CGSizeMake(0, 1)];
+    [l setFont:[UIFont fontWithName:@"HelveticaNeue" size:14]];
+	//    [l setShadowOffset:CGSizeMake(0, 1)];
     [l setText:title];
     
     return l;

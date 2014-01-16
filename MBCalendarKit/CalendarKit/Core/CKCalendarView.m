@@ -25,9 +25,7 @@
 
 @property (nonatomic, strong) NSDateFormatter *formatter;
 
-@property (nonatomic, strong) CKCalendarHeaderView *headerView;
 
-@property (nonatomic, strong) UITableView *table;
 @property (nonatomic, strong) NSArray *events;
 
 //  The index of the highlighted cell
@@ -62,7 +60,7 @@
         _usedCells = [NSMutableSet new];
         _selectedIndex = [_calendar daysFromDate:[self _firstVisibleDateForDisplayMode:_displayMode] toDate:_date];
         _headerView = [CKCalendarHeaderView new];
-        
+        _cellSize = CGSizeMake(46, 44);
         
         //  Accessory Table
         _table = [UITableView new];
@@ -126,9 +124,9 @@
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
 {
-    [[self layer] setShadowColor:[[UIColor darkGrayColor] CGColor]];
-    [[self layer] setShadowOffset:CGSizeMake(0, 3)];
-    [[self layer] setShadowOpacity:1.0];
+	//    [[self layer] setShadowColor:[[UIColor darkGrayColor] CGColor]];
+	//    [[self layer] setShadowOffset:CGSizeMake(0, 3)];
+	//    [[self layer] setShadowOpacity:1.0];
     
     [self reloadAnimated:NO];
     
@@ -160,7 +158,7 @@
     
     if (animated) {
         [UIView animateWithDuration:0.4 animations:^{
-            [super setFrame:frame];    
+            [super setFrame:frame];
         }];
     }
     else
@@ -171,7 +169,7 @@
 
 - (CGRect)_rectForDisplayMode:(CKCalendarDisplayMode)displayMode
 {
-    CGSize cellSize = [self _cellSize];
+    CGSize cellSize = [self cellSize];
     
     CGRect rect = [[[UIApplication sharedApplication] keyWindow] bounds];
     
@@ -201,7 +199,7 @@
 
 - (CGRect)_rectForCellsForDisplayMode:(CKCalendarDisplayMode)displayMode
 {
-    CGSize cellSize = [self _cellSize];
+    CGSize cellSize = [self cellSize];
     
     if (displayMode == CKCalendarViewModeDay) {
         return CGRectZero;
@@ -220,11 +218,7 @@
     return CGRectZero;
 }
 
-- (CGSize)_cellSize
-{
-    // These values must be hard coded in order for rectForDisplayMode: to work correctly
-    return CGSizeMake(46, 44);
-}
+
 
 #pragma mark - Layout
 
@@ -252,8 +246,8 @@
     
     CKCalendarHeaderView *header = [self headerView];
     
-    CGFloat width = [self _cellSize].width * (CGFloat)[[self calendar] daysPerWeekUsingReferenceDate:[self date]];
-    CGRect headerFrame = CGRectMake(0, 0, width, 44);
+    CGFloat width = [self cellSize].width * (CGFloat)[[self calendar] daysPerWeekUsingReferenceDate:[self date]];
+    CGRect headerFrame = CGRectMake(0, 0, width, 80);
     [header setFrame:headerFrame];
     [header setDelegate:self];
     [header setDataSource:self];
@@ -304,13 +298,13 @@
     
     // If the next month is about to be shown, we want to add the new cells at the bottom of the calendar
     if (isNextMonth) {
-        yOffset = [self _rectForCellsForDisplayMode:[self displayMode]].size.height - [self _cellSize].height;
+        yOffset = [self _rectForCellsForDisplayMode:[self displayMode]].size.height - [self cellSize].height;
     }
     
     //  If we're showing the previous month, add the cells at the top
     else if(isPreviousMonth)
     {
-        yOffset = -([self _rectForCellsForDisplayMode:[self displayMode]].size.height) + [self _cellSize].height;
+        yOffset = -([self _rectForCellsForDisplayMode:[self displayMode]].size.height) + [self cellSize].height;
     }
     
     else if ([[self calendar] date:[self previousDate] isSameDayAs:[self date]])
@@ -323,8 +317,8 @@
     NSUInteger columnCount = [self _columnCountForDisplayMode:[self displayMode]];
     
     //  Cache the cell values for easier readability below
-    CGFloat width = [self _cellSize].width;
-    CGFloat height = [self _cellSize].height;
+    CGFloat width = [self cellSize].width;
+    CGFloat height = [self cellSize].height;
     
     //  Cache the start date & header offset
     NSDate *workingDate = [self _firstVisibleDateForDisplayMode:[self displayMode]];
@@ -401,7 +395,13 @@
             [cell setIndex:cellIndex];
             
             if (cellIndex == [self selectedIndex]) {
-                [cell setSelected];
+				//				if ([self.delegate respondsToSelector:@selector(calendarView:canSelectDate:)]){
+				//					if ([self.delegate calendarView:self canSelectDate:[self _dateFromIndex:[self selectedIndex]]]){
+				//						[cell setSelected];
+				//					}
+				//				}else{
+				[cell setSelected];
+				//				}
             }
             
             /* Step 7: Prepare the cell for animation */
@@ -439,7 +439,7 @@
         [self _moveCellsIntoView:cellsBeingAnimatedIntoView andCellsOutOfView:cellsToRemoveAfterAnimation usingOffset:yOffset];
         [self _cleanupCells:cellsToRemoveAfterAnimation];
         [cellsBeingAnimatedIntoView removeAllObjects];
-        [self setIsAnimating:NO];        
+        [self setIsAnimating:NO];
     }
     
     
@@ -478,7 +478,7 @@
     CKCalendarCell *cell = [[self spareCells] anyObject];
     
     if (!cell) {
-        cell = [[CKCalendarCell alloc] initWithSize:[self _cellSize]];
+        cell = [[CKCalendarCell alloc] initWithSize:[self cellSize]];
     }
     
     [self _moveCellFromSpareToUsed:cell];
@@ -648,7 +648,7 @@
 - (void)setMaximumDate:(NSDate *)maximumDate animated:(BOOL)animated
 {
     _maximumDate = maximumDate;
-    [self setDate:[self date] animated:animated];    
+    [self setDate:[self date] animated:animated];
 }
 
 #pragma mark - CKCalendarHeaderViewDataSource
@@ -696,7 +696,7 @@
     NSDate *firstDate = [self _firstVisibleDateForDisplayMode:[self displayMode]];
     NSDate *columnToShow = [[self calendar] dateByAddingDays:index toDate:firstDate];
     
-    return [columnToShow dayNameOnCalendar:[self calendar]];
+    return [columnToShow dayNameOnCalendar:[self calendar]].uppercaseString;
 }
 
 
@@ -729,7 +729,7 @@
     {
         return [[self calendar] date:[self date] isSameWeekAs:[self minimumDate]];
     }
-
+	
     return [[self calendar] date:[self date] isSameDayAs:[self minimumDate]];
 }
 
@@ -761,7 +761,7 @@
 {
     NSDate *date = [self date];
     NSDate *today = [NSDate date];
-
+	
     /* If the cells are animating, don't do anything or we'll break the view */
     
     if ([self isAnimating]) {
@@ -1117,7 +1117,7 @@
     {
         return [[self calendar]date:date isBeforeDate:[self maximumDate]];
     }
-
+	
     //  If there's no maximum, treat all dates that are before
     //  the minimum as valid
     else if(![self maximumDate])
@@ -1172,7 +1172,7 @@
                 index = [cell index];
                 break;
             }
-
+			
         }
         
         //  Clip the index to minimum and maximum dates
@@ -1185,14 +1185,20 @@
         {
             index = [self _indexFromDate:[self minimumDate]];
         }
-
+		
         // Save the new index
         [self setSelectedIndex:index];
         
         //  Update the cell highlighting
         for (CKCalendarCell *cell in [self usedCells]) {
             if ([cell index] == [self selectedIndex]) {
-                [cell setSelected];
+				//				if ([self.delegate respondsToSelector:@selector(calendarView:canSelectDate:)]){
+				//					if ([self.delegate calendarView:self canSelectDate:date]){
+				//						[cell setSelected];
+				//					}
+				//				}else{
+				[cell setSelected];
+				//				}
             }
             else
             {

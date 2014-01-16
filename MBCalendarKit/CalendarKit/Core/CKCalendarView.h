@@ -14,9 +14,12 @@
 
 #import "CKCalendarDelegate.h"
 #import "CKCalendarDataSource.h"
-
+@class CKCalendarHeaderView;
 @interface CKCalendarView : UIView
 
+@property (nonatomic, strong) CKCalendarHeaderView *headerView;
+@property (nonatomic, strong) UITableView *table;
+@property CGSize cellSize;
 @property (nonatomic, assign) CKCalendarDisplayMode displayMode;
 
 @property(nonatomic, strong) NSLocale       *locale;            // default is [NSLocale currentLocale]. setting nil returns to default
