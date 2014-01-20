@@ -67,6 +67,8 @@
         _dot = [UIView new];
         [_dot setHidden:YES];
         _showDot = NO;
+		
+		self.clipsToBounds = YES;
     }
     return self;
 }
@@ -195,7 +197,7 @@
     [[self label] setShadowOffset:CGSizeMake(0, 0.5)];
     
     [self setBorderColor:[self cellBorderColor]];
-    [self setBorderWidth:0.5];
+    [self setBorderWidth:.5];
     [self setBackgroundColor:[self normalBackgroundColor]];
     
 	self.backgroundImageView.image = nil;
