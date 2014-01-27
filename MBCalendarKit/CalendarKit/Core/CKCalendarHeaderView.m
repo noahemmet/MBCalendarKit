@@ -63,7 +63,9 @@
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
 {
-    [self layoutSubviews];
+	if (newSuperview){
+		[self layoutSubviews];
+	}
     [super willMoveToSuperview:newSuperview];
 }
 
