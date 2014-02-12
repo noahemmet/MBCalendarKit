@@ -122,18 +122,20 @@
     }
 	//
 	_forwardButton = [[UIImageView alloc]initWithImage:self.forwardImage];
+	_forwardButton.contentMode = UIViewContentModeCenter;
 	_forwardButton.frame = ({
 		CGRect frame = forwardFrame;
-		frame.size = self.forwardImage.size;
+		//		frame.size = self.forwardImage.size;
 		frame;
 	});
 	_forwardButton.center = CGPointMake(_forwardButton.center.x, self.monthTitle.center.y);
 	
 	
 	_backwardButton = [[UIImageView alloc]initWithImage:self.backwardImage];
+	_backwardButton.contentMode = UIViewContentModeCenter;
 	_backwardButton.frame = ({
 		CGRect frame = backFrame;
-		frame.size = self.backwardImage.size;
+		//		frame.size = self.backwardImage.size;
 		frame;
 	});
 	_backwardButton.center = CGPointMake(_backwardButton.center.x, self.monthTitle.center.y);
